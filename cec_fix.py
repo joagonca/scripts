@@ -2,6 +2,7 @@
 
 import subprocess
 import time
+from threading import Thread
 
 last_state_time = time.time()
 current_state = 0
@@ -15,7 +16,7 @@ weird_state_machine = [
 
 def kill_tv():
     """Turns TV off"""
-    time.sleep(5)
+    time.sleep(8)
     subprocess.run(['cec-ctl', '--to', '0', '--standby'], check=False)
 
     with open("cec_fix.log", "a", encoding="utf-8") as file:
@@ -40,7 +41,8 @@ def process_output(line):
 
     if current_state == 4:
         current_state = 0
-        kill_tv()
+        t = Thread(target=kill_tv)
+        t.start()
 
 def main():
     """Where the magic does not happen"""
