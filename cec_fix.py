@@ -38,7 +38,7 @@ def process_output(line):
     now = time.time()
     diff = now - last_state_time
 
-    if diff >= 10:
+    if diff >= 10 and current_state != 0:
         current_state = 0
         logger.info("State timed out")
 
