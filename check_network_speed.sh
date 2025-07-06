@@ -41,7 +41,17 @@ if [ "$CURRENT_SPEED" -lt 1000 ]; then
         exit 1
     fi
     
-    echo "Interface brought back up"
+    echo "Interface brought back up. Requesting DHCP lease..."
+    
+    # Request new DHCP lease
+    sudo dhclient -r "$INTERFACE" 2>/dev/null  # Release existing lease
+    sudo dhclient "$INTERFACE"                  # Request new lease
+    
+    if [ $? -eq 0 ]; then
+        echo "DHCP lease renewed successfully"
+    else
+        echo "Warning: DHCP renewal may have failed"
+    fi
 else
     echo "Speed is 1000 Mbps or higher. No action needed."
 fi
